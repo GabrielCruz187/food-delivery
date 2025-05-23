@@ -2,18 +2,22 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { ShoppingCart, Menu, X } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
+import { ShoppingCart, Menu, X, User, LogOut } from "lucide-react"
 import { useCart } from "@/context/cart-context"
+import { getCurrentUser, logout } from "@/lib/api"
 import "../styles/header.css"
 
 export default function Header() {
   const pathname = usePathname()
+  const router = useRouter()
   const { cart } = useCart()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [cartItemCount, setCartItemCount] = useState(0)
   const [isAdminPage, setIsAdminPage] = useState(false)
+  const [user, setUser] = useState(null)
+  const [showUserMenu, setShowUserMenu] = useState(false)
 
   useEffect(() => {
     setIsAdminPage(pathname.startsWith("/admin"))
@@ -32,12 +36,29 @@ export default function Header() {
     setCartItemCount(cart.reduce((total, item) => total + item.quantity, 0))
   }, [cart])
 
+  useEffect(() => {
+    // Check for logged in user
+    const currentUser = getCurrentUser()
+    setUser(currentUser)
+  }, [pathname])
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
 
   const closeMenu = () => {
     setIsMenuOpen(false)
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      setUser(null)
+      setShowUserMenu(false)
+      router.push("/")
+    } catch (error) {
+      console.error("Logout error:", error)
+    }
   }
 
   if (isAdminPage) {
@@ -88,6 +109,34 @@ export default function Header() {
             {cartItemCount > 0 && <span className="cart-count">{cartItemCount}</span>}
           </Link>
 
+          {user ? (
+            <div className="user-menu-container">
+              <button className="user-menu-button" onClick={() => setShowUserMenu(!showUserMenu)}>
+                <User size={24} />
+              </button>
+
+              {showUserMenu && (
+                <div className="user-dropdown">
+                  <div className="user-email">{user.email}</div>
+                  <Link href="/profile" className="dropdown-item" onClick={() => setShowUserMenu(false)}>
+                    Profile
+                  </Link>
+                  <Link href="/orders" className="dropdown-item" onClick={() => setShowUserMenu(false)}>
+                    My Orders
+                  </Link>
+                  <button className="dropdown-item logout" onClick={handleLogout}>
+                    <LogOut size={16} />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link href="/login" className="login-button">
+              Login
+            </Link>
+          )}
+
           <button className="menu-toggle" onClick={toggleMenu}>
             <Menu size={24} />
           </button>
@@ -96,6 +145,3 @@ export default function Header() {
     </header>
   )
 }
-
-
-
