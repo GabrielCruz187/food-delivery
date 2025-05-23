@@ -1,0 +1,76 @@
+.order-confirmation-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 2rem 1rem;
+}
+
+.confirmation-container {
+  text-align: center;
+  max-width: 500px;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 3rem 2rem;
+}
+
+.success-icon {
+  color: var(--success-color);
+  margin-bottom: 1.5rem;
+}
+
+.confirmation-container h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.order-id {
+  font-size: 1.125rem;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+}
+
+.confirmation-message {
+  margin-bottom: 2rem;
+}
+
+.confirmation-message p {
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.estimated-time {
+  background-color: var(--background-light);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.estimated-time h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.time {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .action-buttons {
+    flex-direction: column;
+  }
+}
