@@ -1,21 +1,16 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-export function middleware(request: NextRequest) {
-  // Check if this is an admin route
+export async function middleware(request: NextRequest) {
+  // Simplificar o middleware - apenas verificar rotas admin
   if (request.nextUrl.pathname.startsWith("/admin")) {
-    // Skip login page
+    // Permitir acesso à página de login
     if (request.nextUrl.pathname === "/admin/login") {
       return NextResponse.next()
     }
 
-    // Check for admin token in cookies
-    const adminToken = request.cookies.get("sb-access-token")
-
-    if (!adminToken) {
-      // Redirect to admin login if no token
-      return NextResponse.redirect(new URL("/admin/login", request.url))
-    }
+    // Para outras rotas admin, deixar o componente verificar a autenticação
+    return NextResponse.next()
   }
 
   return NextResponse.next()

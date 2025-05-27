@@ -1,185 +1,238 @@
 .admin-layout {
-    display: flex;
-    min-height: 100vh;
-    background-color: var(--background-light);
-  }
-  
-  .admin-content {
-    flex: 1;
-    padding: 1.5rem;
-    overflow-y: auto;
-  }
-  
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--background-light);
+}
+
+.admin-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.header-left h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.welcome-message {
+  color: var(--text-light);
+  font-size: 0.875rem;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-color);
+}
+
+.logout-button:hover {
+  background-color: var(--background-light);
+  border-color: var(--text-light);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+}
+
+.stat-icon.orders {
+  background-color: rgba(78, 205, 196, 0.1);
+  color: var(--secondary-color);
+}
+
+.stat-icon.revenue {
+  background-color: rgba(255, 107, 107, 0.1);
+  color: var(--primary-color);
+}
+
+.stat-icon.customers {
+  background-color: rgba(255, 230, 109, 0.1);
+  color: var(--accent-color);
+}
+
+.stat-icon.products {
+  background-color: rgba(46, 204, 113, 0.1);
+  color: var(--success-color);
+}
+
+.stat-details h3 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-light);
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.recent-orders {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.view-all-button {
+  font-size: 0.875rem;
+  color: var(--primary-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.view-all-button:hover {
+  color: var(--primary-hover);
+}
+
+.orders-table-container {
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  color: var(--text-light);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.875rem;
+}
+
+.orders-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.875rem;
+}
+
+.orders-table tr:last-child td {
+  border-bottom: none;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-badge.delivered {
+  background-color: rgba(46, 204, 113, 0.1);
+  color: var(--success-color);
+}
+
+.status-badge.processing {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+}
+
+.status-badge.pending {
+  background-color: rgba(243, 156, 18, 0.1);
+  color: var(--warning-color);
+}
+
+.status-badge.cancelled {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: var(--error-color);
+}
+
+.empty-orders {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-light);
+}
+
+.empty-orders p {
+  font-size: 1rem;
+}
+
+.admin-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  color: var(--text-light);
+}
+
+.admin-loading p {
+  margin-top: 1rem;
+  font-size: 1.125rem;
+}
+
+@media (max-width: 768px) {
   .admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
   }
-  
-  .admin-header h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-  }
-  
-  .logout-button {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    background-color: white;
-    border: 1px solid var(--border-color);
-    border-radius: 0.375rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .logout-button svg {
-    margin-right: 0.5rem;
-  }
-  
-  .logout-button:hover {
-    background-color: var(--background-light);
-    border-color: var(--text-light);
-  }
-  
+
   .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
+    grid-template-columns: 1fr;
   }
-  
-  .stat-card {
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
-  .stat-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 0.5rem;
-    margin-right: 1rem;
-  }
-  
-  .stat-icon.orders {
-    background-color: rgba(78, 205, 196, 0.1);
-    color: var(--secondary-color);
-  }
-  
-  .stat-icon.revenue {
-    background-color: rgba(255, 107, 107, 0.1);
-    color: var(--primary-color);
-  }
-  
-  .stat-icon.customers {
-    background-color: rgba(255, 230, 109, 0.1);
-    color: var(--accent-color);
-  }
-  
-  .stat-icon.products {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: var(--success-color);
-  }
-  
-  .stat-details h3 {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-light);
-    margin-bottom: 0.25rem;
-  }
-  
-  .stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-  }
-  
-  .recent-orders {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    padding: 1.5rem;
-  }
-  
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .section-header h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
-  
-  .view-all-button {
-    font-size: 0.875rem;
-    color: var(--primary-color);
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
+
   .orders-table-container {
-    overflow-x: auto;
-  }
-  
-  .orders-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .orders-table th {
-    text-align: left;
-    padding: 0.75rem 1rem;
-    font-weight: 500;
-    color: var(--text-light);
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .orders-table td {
-    padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .orders-table tr:last-child td {
-    border-bottom: none;
-  }
-  
-  .status-badge {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
     font-size: 0.75rem;
-    font-weight: 600;
   }
-  
-  .status-badge.delivered {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: var(--success-color);
-  }
-  
-  .status-badge.processing {
-    background-color: rgba(52, 152, 219, 0.1);
-    color: #3498db;
-  }
-  
-  .status-badge.pending {
-    background-color: rgba(243, 156, 18, 0.1);
-    color: var(--warning-color);
-  }
-  
-  .status-badge.cancelled {
-    background-color: rgba(231, 76, 60, 0.1);
-    color: var(--error-color);
-  }
-  
+}
+
   

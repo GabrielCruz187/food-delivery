@@ -3,42 +3,36 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { Plus, Edit, Trash2, Search } from "lucide-react"
+import { Plus, Edit, Trash2, Search, Loader2 } from "lucide-react"
 import AdminSidebar from "@/components/admin-sidebar"
 import MenuItemModal from "@/components/menu-item-modal"
-import { getMenuItems, deleteMenuItem } from "@/lib/api"
+import { getMenuItems, deleteMenuItem, getCategories, createMenuItem, updateMenuItem } from "@/lib/api"
 import "../../../styles/admin-menu.css"
 
 export default function AdminMenuPage() {
   const router = useRouter()
   const [menuItems, setMenuItems] = useState([])
+  const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentItem, setCurrentItem] = useState(null)
+  const [isDeleting, setIsDeleting] = useState<number | null>(null)
 
   useEffect(() => {
-    // Check if user is authenticated
-    const isAuthenticated = localStorage.getItem("adminToken")
-    if (!isAuthenticated) {
-      router.push("/admin/login")
-      return
-    }
+    fetchData()
+  }, [])
 
-    fetchMenuItems()
-  }, [router])
-
-  async function fetchMenuItems() {
+  async function fetchData() {
     setLoading(true)
     try {
-      // In a real app, this would fetch from the API
-      const items = await getMenuItems()
+      const [items, cats] = await Promise.all([getMenuItems(), getCategories()])
       setMenuItems(items)
+      setCategories(cats)
     } catch (error) {
-      console.error("Error fetching menu items:", error)
-      // For demo purposes, set some sample data
-      setMenuItems(sampleMenuItems)
+      console.error("Error fetching data:", error)
+      alert("Failed to load menu data. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -49,41 +43,46 @@ export default function AdminMenuPage() {
     setIsModalOpen(true)
   }
 
-  const handleEditItem = (item) => {
+  const handleEditItem = (item: any) => {
     setCurrentItem(item)
     setIsModalOpen(true)
   }
 
-  const handleDeleteItem = async (id) => {
+  const handleDeleteItem = async (id: number) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
-        // In a real app, this would delete from the API
+        setIsDeleting(id)
         await deleteMenuItem(id)
-        // Update local state
-        setMenuItems(menuItems.filter((item) => item.id !== id))
+        setMenuItems(menuItems.filter((item: any) => item.id !== id))
       } catch (error) {
         console.error("Error deleting menu item:", error)
         alert("Failed to delete item. Please try again.")
+      } finally {
+        setIsDeleting(null)
       }
     }
   }
 
-  const handleSaveItem = (item) => {
-    // If editing an existing item
-    if (item.id) {
-      setMenuItems(menuItems.map((i) => (i.id === item.id ? item : i)))
-    } else {
-      // If adding a new item
-      const newItem = {
-        ...item,
-        id: Date.now(), // Generate a temporary ID
+  const handleSaveItem = async (item: any) => {
+    try {
+      let savedItem
+      if (item.id) {
+        // Editando item existente
+        savedItem = await updateMenuItem(item.id, item)
+        setMenuItems(menuItems.map((i: any) => (i.id === item.id ? savedItem : i)))
+      } else {
+        // Criando novo item
+        savedItem = await createMenuItem(item)
+        setMenuItems([savedItem, ...menuItems])
       }
-      setMenuItems([...menuItems, newItem])
+      setIsModalOpen(false)
+    } catch (error) {
+      console.error("Error saving menu item:", error)
+      throw error // Re-throw para que o modal possa mostrar o erro
     }
-    setIsModalOpen(false)
   }
 
-  const filteredItems = menuItems.filter((item) => {
+  const filteredItems = menuItems.filter((item: any) => {
     const matchesSearch =
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -91,10 +90,20 @@ export default function AdminMenuPage() {
     return matchesSearch && matchesCategory
   })
 
-  const categories = ["all", ...new Set(menuItems.map((item) => item.category))]
+  const allCategories = ["all", ...categories]
 
   if (loading) {
-    return <div className="loading">Loading menu items...</div>
+    return (
+      <div className="admin-layout">
+        <AdminSidebar />
+        <div className="admin-content">
+          <div className="loading-container">
+            <Loader2 size={48} className="animate-spin" />
+            <p>Loading menu items...</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -123,7 +132,7 @@ export default function AdminMenuPage() {
           </div>
 
           <div className="category-filters">
-            {categories.map((category) => (
+            {allCategories.map((category) => (
               <button
                 key={category}
                 className={`category-filter ${selectedCategory === category ? "active" : ""}`}
@@ -136,7 +145,7 @@ export default function AdminMenuPage() {
         </div>
 
         <div className="menu-items-grid">
-          {filteredItems.map((item) => (
+          {filteredItems.map((item: any) => (
             <div className="menu-item-card" key={item.id}>
               <div className="item-image">
                 <Image src={item.image || "/placeholder.svg"} alt={item.name} width={200} height={150} />
@@ -155,8 +164,12 @@ export default function AdminMenuPage() {
                   Edit
                 </button>
 
-                <button className="delete-button" onClick={() => handleDeleteItem(item.id)}>
-                  <Trash2 size={16} />
+                <button
+                  className="delete-button"
+                  onClick={() => handleDeleteItem(item.id)}
+                  disabled={isDeleting === item.id}
+                >
+                  {isDeleting === item.id ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
                   Delete
                 </button>
               </div>
@@ -164,84 +177,36 @@ export default function AdminMenuPage() {
           ))}
         </div>
 
+        {filteredItems.length === 0 && (
+          <div className="empty-state">
+            <p>No menu items found matching your criteria.</p>
+            {searchQuery || selectedCategory !== "all" ? (
+              <button
+                className="clear-filters-button"
+                onClick={() => {
+                  setSearchQuery("")
+                  setSelectedCategory("all")
+                }}
+              >
+                Clear Filters
+              </button>
+            ) : (
+              <button className="add-first-item-button" onClick={handleAddItem}>
+                Add Your First Item
+              </button>
+            )}
+          </div>
+        )}
+
         {isModalOpen && (
           <MenuItemModal
             item={currentItem}
             onSave={handleSaveItem}
             onClose={() => setIsModalOpen(false)}
-            categories={categories.filter((cat) => cat !== "all")}
+            categories={categories}
           />
         )}
       </div>
     </div>
   )
 }
-
-// Sample data for demonstration
-const sampleMenuItems = [
-  {
-    id: 1,
-    name: "Margherita Pizza",
-    description: "Classic pizza with tomato sauce, mozzarella, and basil",
-    price: 12.99,
-    category: "pizza",
-    image: "/placeholder.svg?height=150&width=200&text=Pizza",
-  },
-  {
-    id: 2,
-    name: "Pepperoni Pizza",
-    description: "Pizza topped with pepperoni slices and cheese",
-    price: 14.99,
-    category: "pizza",
-    image: "/placeholder.svg?height=150&width=200&text=Pepperoni",
-  },
-  {
-    id: 3,
-    name: "Classic Burger",
-    description: "Beef patty with lettuce, tomato, and special sauce",
-    price: 9.99,
-    category: "burgers",
-    image: "/placeholder.svg?height=150&width=200&text=Burger",
-  },
-  {
-    id: 4,
-    name: "Cheeseburger",
-    description: "Classic burger with American cheese",
-    price: 10.99,
-    category: "burgers",
-    image: "/placeholder.svg?height=150&width=200&text=Cheeseburger",
-  },
-  {
-    id: 5,
-    name: "California Roll",
-    description: "Crab, avocado, and cucumber roll",
-    price: 16.99,
-    category: "sushi",
-    image: "/placeholder.svg?height=150&width=200&text=Sushi",
-  },
-  {
-    id: 6,
-    name: "Pasta Carbonara",
-    description: "Creamy pasta with bacon and parmesan",
-    price: 14.99,
-    category: "pasta",
-    image: "/placeholder.svg?height=150&width=200&text=Pasta",
-  },
-  {
-    id: 7,
-    name: "Chocolate Cake",
-    description: "Rich chocolate cake with ganache",
-    price: 7.99,
-    category: "desserts",
-    image: "/placeholder.svg?height=150&width=200&text=Cake",
-  },
-  {
-    id: 8,
-    name: "Iced Coffee",
-    description: "Cold brewed coffee with milk",
-    price: 4.99,
-    category: "drinks",
-    image: "/placeholder.svg?height=150&width=200&text=Coffee",
-  },
-]
-

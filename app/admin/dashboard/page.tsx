@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ShoppingBag, Users, DollarSign, Package, LogOut } from "lucide-react"
+import { ShoppingBag, Users, DollarSign, Package, LogOut, Loader2 } from "lucide-react"
 import AdminSidebar from "@/components/admin-sidebar"
-import { getOrderStats, getRecentOrders } from "@/lib/api"
+import { getOrderStats, getRecentOrders, getCurrentUser, logout } from "@/lib/api"
+import { supabase } from "@/lib/superbase"
 import "../../../styles/admin-dashboard.css"
 
 export default function AdminDashboardPage() {
@@ -17,49 +18,119 @@ export default function AdminDashboardPage() {
   })
   const [recentOrders, setRecentOrders] = useState([])
   const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
+  const [authChecked, setAuthChecked] = useState(false)
 
   useEffect(() => {
-    // Check if user is authenticated
-    const isAuthenticated = localStorage.getItem("adminToken")
-    if (!isAuthenticated) {
-      router.push("/admin/login")
-      return
+    if (!authChecked) {
+      checkAuthAndLoadData()
     }
+  }, [authChecked])
 
-    async function fetchDashboardData() {
-      setLoading(true)
-      try {
-        // In a real app, these would fetch from the API
-        const statsData = await getOrderStats()
-        const ordersData = await getRecentOrders()
+  const checkAuthAndLoadData = async () => {
+    try {
+      console.log("Dashboard: Checking authentication...")
 
-        setStats(statsData)
-        setRecentOrders(ordersData)
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error)
-        // For demo purposes, set some sample data
-        setStats({
-          totalOrders: 156,
-          totalRevenue: 4289.45,
-          totalCustomers: 78,
-          totalProducts: 32,
-        })
-        setRecentOrders(sampleRecentOrders)
-      } finally {
-        setLoading(false)
+      // Verificar se o usuário está autenticado
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      console.log("Dashboard: Session:", session ? "Found" : "Not found")
+
+      if (!session) {
+        console.log("Dashboard: No session found, redirecting to login")
+        router.push("/admin/login")
+        return
       }
+
+      // Verificar se o usuário é admin
+      const currentUser = await getCurrentUser()
+      console.log("Dashboard: Current user:", currentUser)
+
+      if (!currentUser) {
+        console.log("Dashboard: No user data found, redirecting to login")
+        router.push("/admin/login")
+        return
+      }
+
+      if (!currentUser.isAdmin) {
+        console.log("Dashboard: User is not admin, redirecting to home")
+        router.push("/")
+        return
+      }
+
+      console.log("Dashboard: User is admin, loading dashboard data...")
+      setUser(currentUser)
+      setAuthChecked(true)
+
+      // Carregar dados do dashboard
+      await fetchDashboardData()
+    } catch (error) {
+      console.error("Dashboard: Error checking auth:", error)
+      router.push("/admin/login")
     }
+  }
 
-    fetchDashboardData()
-  }, [router])
+  const fetchDashboardData = async () => {
+    setLoading(true)
+    try {
+      console.log("Dashboard: Fetching dashboard data...")
+      const [statsData, ordersData] = await Promise.all([getOrderStats(), getRecentOrders()])
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken")
-    router.push("/admin/login")
+      console.log("Dashboard: Stats data:", statsData)
+      console.log("Dashboard: Orders data:", ordersData)
+
+      setStats(statsData)
+      setRecentOrders(ordersData)
+    } catch (error) {
+      console.error("Dashboard: Error fetching dashboard data:", error)
+      // Usar dados de exemplo em caso de erro
+      setStats({
+        totalOrders: 0,
+        totalRevenue: 0,
+        totalCustomers: 0,
+        totalProducts: 0,
+      })
+      setRecentOrders([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      router.push("/admin/login")
+    } catch (error) {
+      console.error("Logout error:", error)
+    }
+  }
+
+  // Mostrar loading enquanto verifica autenticação
+  if (!authChecked) {
+    return (
+      <div className="admin-layout">
+        <div className="admin-loading">
+          <Loader2 size={48} className="animate-spin" />
+          <p>Checking authentication...</p>
+        </div>
+      </div>
+    )
   }
 
   if (loading) {
-    return <div className="loading">Loading dashboard...</div>
+    return (
+      <div className="admin-layout">
+        <AdminSidebar />
+        <div className="admin-content">
+          <div className="admin-loading">
+            <Loader2 size={48} className="animate-spin" />
+            <p>Loading dashboard...</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -68,7 +139,10 @@ export default function AdminDashboardPage() {
 
       <div className="admin-content">
         <div className="admin-header">
-          <h1>Dashboard</h1>
+          <div className="header-left">
+            <h1>Dashboard</h1>
+            {user && <p className="welcome-message">Welcome back, {user.name}!</p>}
+          </div>
           <button className="logout-button" onClick={handleLogout}>
             <LogOut size={16} />
             Logout
@@ -125,76 +199,42 @@ export default function AdminDashboardPage() {
             </button>
           </div>
 
-          <div className="orders-table-container">
-            <table className="orders-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Customer</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentOrders.map((order) => (
-                  <tr key={order.id}>
-                    <td>#{order.id}</td>
-                    <td>{typeof order.customer === "object" ? order.customer.name : order.customer}</td>
-                    <td>{order.date}</td>
-                    <td>
-                      <span className={`status-badge ${order.status.toLowerCase()}`}>{order.status}</span>
-                    </td>
-                    <td>${order.total.toFixed(2)}</td>
+          {recentOrders.length > 0 ? (
+            <div className="orders-table-container">
+              <table className="orders-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {recentOrders.map((order: any) => (
+                    <tr key={order.id}>
+                      <td>#{order.id}</td>
+                      <td>{order.customer}</td>
+                      <td>{order.date}</td>
+                      <td>
+                        <span className={`status-badge ${order.status.toLowerCase()}`}>{order.status}</span>
+                      </td>
+                      <td>${order.total.toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="empty-orders">
+              <p>No orders found. Orders will appear here once customers start placing them.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
   )
 }
-
-// Sample data for demonstration
-const sampleRecentOrders = [
-  {
-    id: "3210",
-    customer: "Olivia Martin",
-    date: "Apr 4, 2023",
-    status: "Delivered",
-    total: 42.25,
-  },
-  {
-    id: "3209",
-    customer: "Ava Johnson",
-    date: "Apr 3, 2023",
-    status: "Processing",
-    total: 74.99,
-  },
-  {
-    id: "3208",
-    customer: "Michael Brown",
-    date: "Apr 2, 2023",
-    status: "Pending",
-    total: 32.5,
-  },
-  {
-    id: "3207",
-    customer: "Sophia Anderson",
-    date: "Apr 1, 2023",
-    status: "Delivered",
-    total: 99.99,
-  },
-  {
-    id: "3206",
-    customer: "Daniel Smith",
-    date: "Mar 31, 2023",
-    status: "Cancelled",
-    total: 67.5,
-  },
-]
-
 
 

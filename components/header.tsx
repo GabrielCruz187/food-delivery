@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { ShoppingCart, Menu, X, User, LogOut } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 import { getCurrentUser, logout } from "@/lib/api"
+import { supabase } from "@/lib/superbase"
 import "../styles/header.css"
 
 export default function Header() {
@@ -16,8 +17,9 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [cartItemCount, setCartItemCount] = useState(0)
   const [isAdminPage, setIsAdminPage] = useState(false)
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<any>(null)
   const [showUserMenu, setShowUserMenu] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     setIsAdminPage(pathname.startsWith("/admin"))
@@ -37,10 +39,34 @@ export default function Header() {
   }, [cart])
 
   useEffect(() => {
-    // Check for logged in user
-    const currentUser = getCurrentUser()
-    setUser(currentUser)
-  }, [pathname])
+    // Verificar usuário atual
+    const checkUser = async () => {
+      try {
+        const currentUser = await getCurrentUser()
+        setUser(currentUser)
+      } catch (error) {
+        console.error("Error checking user:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkUser()
+
+    // Escutar mudanças de autenticação
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        const currentUser = await getCurrentUser()
+        setUser(currentUser)
+      } else if (event === "SIGNED_OUT") {
+        setUser(null)
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -109,7 +135,9 @@ export default function Header() {
             {cartItemCount > 0 && <span className="cart-count">{cartItemCount}</span>}
           </Link>
 
-          {user ? (
+          {loading ? (
+            <div className="loading-user">...</div>
+          ) : user ? (
             <div className="user-menu-container">
               <button className="user-menu-button" onClick={() => setShowUserMenu(!showUserMenu)}>
                 <User size={24} />
@@ -117,13 +145,23 @@ export default function Header() {
 
               {showUserMenu && (
                 <div className="user-dropdown">
-                  <div className="user-email">{user.email}</div>
+                  <div className="user-info">
+                    <div className="user-name">{user.name}</div>
+                    <div className="user-email">{user.email}</div>
+                  </div>
+                  <div className="dropdown-divider"></div>
                   <Link href="/profile" className="dropdown-item" onClick={() => setShowUserMenu(false)}>
                     Profile
                   </Link>
                   <Link href="/orders" className="dropdown-item" onClick={() => setShowUserMenu(false)}>
                     My Orders
                   </Link>
+                  {user.isAdmin && (
+                    <Link href="/admin/dashboard" className="dropdown-item" onClick={() => setShowUserMenu(false)}>
+                      Admin Panel
+                    </Link>
+                  )}
+                  <div className="dropdown-divider"></div>
                   <button className="dropdown-item logout" onClick={handleLogout}>
                     <LogOut size={16} />
                     Logout
