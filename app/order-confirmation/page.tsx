@@ -12,7 +12,7 @@ export default function OrderConfirmationPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate loading
+    // Simular carregamento
     const timer = setTimeout(() => {
       setLoading(false)
     }, 1000)
@@ -21,7 +21,7 @@ export default function OrderConfirmationPage() {
   }, [])
 
   if (loading) {
-    return <div className="loading">Processing your order...</div>
+    return <div className="loading">Processando seu pedido...</div>
   }
 
   return (
@@ -31,25 +31,25 @@ export default function OrderConfirmationPage() {
           <CheckCircle size={64} />
         </div>
 
-        <h1>Order Confirmed!</h1>
-        <p className="order-id">Order ID: #{orderId}</p>
+        <h1>Pedido Confirmado!</h1>
+        <p className="order-id">ID do Pedido: #{orderId}</p>
 
         <div className="confirmation-message">
-          <p>Thank you for your order! We've received your order and will start preparing it shortly.</p>
-          <p>You'll receive an email confirmation with your order details and tracking information.</p>
+          <p>Obrigado pelo seu pedido! Recebemos seu pedido e começaremos a prepará-lo em breve.</p>
+          <p>Você receberá um email de confirmação com os detalhes do seu pedido e informações de rastreamento.</p>
         </div>
 
         <div className="estimated-time">
-          <h3>Estimated Delivery Time</h3>
-          <p className="time">30-45 minutes</p>
+          <h3>Tempo Estimado de Entrega</h3>
+          <p className="time">30-45 minutos</p>
         </div>
 
         <div className="action-buttons">
           <Link href="/menu" className="secondary-button">
-            Order More
+            Pedir Mais
           </Link>
           <Link href="/" className="primary-button">
-            Back to Home
+            Voltar ao Início
           </Link>
         </div>
       </div>

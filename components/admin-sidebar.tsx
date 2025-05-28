@@ -17,7 +17,7 @@ export default function AdminSidebar() {
   return (
     <aside className={`admin-sidebar ${collapsed ? "collapsed" : ""}`}>
       <div className="sidebar-header">
-        <h2 className="sidebar-title">Admin Panel</h2>
+        <h2 className="sidebar-title">Painel Admin</h2>
         <button className="collapse-button" onClick={toggleSidebar}>
           {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </button>
@@ -31,25 +31,26 @@ export default function AdminSidebar() {
 
         <Link href="/admin/orders" className={`nav-item ${pathname === "/admin/orders" ? "active" : ""}`}>
           <ShoppingBag size={20} />
-          <span className="nav-text">Orders</span>
+          <span className="nav-text">Pedidos</span>
         </Link>
 
         <Link href="/admin/menu" className={`nav-item ${pathname === "/admin/menu" ? "active" : ""}`}>
           <Package size={20} />
-          <span className="nav-text">Menu Items</span>
+          <span className="nav-text">Cardápio</span>
         </Link>
 
         <Link href="/admin/customers" className={`nav-item ${pathname === "/admin/customers" ? "active" : ""}`}>
           <Users size={20} />
-          <span className="nav-text">Customers</span>
+          <span className="nav-text">Clientes</span>
         </Link>
 
         <Link href="/admin/settings" className={`nav-item ${pathname === "/admin/settings" ? "active" : ""}`}>
           <Settings size={20} />
-          <span className="nav-text">Settings</span>
+          <span className="nav-text">Configurações</span>
         </Link>
       </nav>
     </aside>
   )
 }
+
 

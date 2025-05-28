@@ -35,18 +35,18 @@ export default function CheckoutPage() {
   const validateForm = () => {
     const newErrors = {}
 
-    if (!formData.name.trim()) newErrors.name = "Name is required"
-    if (!formData.email.trim()) newErrors.email = "Email is required"
-    if (!/^\S+@\S+\.\S+$/.test(formData.email)) newErrors.email = "Email is invalid"
-    if (!formData.phone.trim()) newErrors.phone = "Phone is required"
-    if (!formData.address.trim()) newErrors.address = "Address is required"
-    if (!formData.city.trim()) newErrors.city = "City is required"
-    if (!formData.zipCode.trim()) newErrors.zipCode = "ZIP code is required"
+    if (!formData.name.trim()) newErrors.name = "Nome é obrigatório"
+    if (!formData.email.trim()) newErrors.email = "Email é obrigatório"
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) newErrors.email = "Email é inválido"
+    if (!formData.phone.trim()) newErrors.phone = "Telefone é obrigatório"
+    if (!formData.address.trim()) newErrors.address = "Endereço é obrigatório"
+    if (!formData.city.trim()) newErrors.city = "Cidade é obrigatória"
+    if (!formData.zipCode.trim()) newErrors.zipCode = "CEP é obrigatório"
 
     if (formData.paymentMethod === "credit") {
-      if (!formData.cardNumber.trim()) newErrors.cardNumber = "Card number is required"
-      if (!formData.cardExpiry.trim()) newErrors.cardExpiry = "Expiry date is required"
-      if (!formData.cardCvc.trim()) newErrors.cardCvc = "CVC is required"
+      if (!formData.cardNumber.trim()) newErrors.cardNumber = "Número do cartão é obrigatório"
+      if (!formData.cardExpiry.trim()) newErrors.cardExpiry = "Data de validade é obrigatória"
+      if (!formData.cardCvc.trim()) newErrors.cardCvc = "CVC é obrigatório"
     }
 
     setErrors(newErrors)
@@ -61,7 +61,6 @@ export default function CheckoutPage() {
     setLoading(true)
 
     try {
-      // In a real app, this would send the order to the backend
       const orderData = {
         customer: {
           name: formData.name,
@@ -72,21 +71,20 @@ export default function CheckoutPage() {
           zipCode: formData.zipCode,
         },
         items: cart,
-        total: cartTotal + 3.99 + cartTotal * 0.08,
+        total: cartTotal + 8.99 + cartTotal * 0.08,
         paymentMethod: formData.paymentMethod,
       }
 
       const order = await createOrder(orderData)
 
-      // Clear the cart after successful order
+      // Limpar o carrinho após pedido bem-sucedido
       clearCart()
 
-      // Redirect to order confirmation page
+      // Redirecionar para página de confirmação
       router.push(`/order-confirmation?id=${order.id}`)
     } catch (error) {
       console.error("Error creating order:", error)
-      // In a real app, show error message to user
-      alert("There was an error processing your order. Please try again.")
+      alert("Houve um erro ao processar seu pedido. Tente novamente.")
     } finally {
       setLoading(false)
     }
@@ -94,15 +92,15 @@ export default function CheckoutPage() {
 
   return (
     <div className="checkout-page">
-      <h1>Checkout</h1>
+      <h1>Finalizar Pedido</h1>
 
       <div className="checkout-container">
         <form className="checkout-form" onSubmit={handleSubmit}>
           <div className="form-section">
-            <h2>Delivery Information</h2>
+            <h2>Informações de Entrega</h2>
 
             <div className="form-group">
-              <label htmlFor="name">Full Name</label>
+              <label htmlFor="name">Nome Completo</label>
               <input
                 type="text"
                 id="name"
@@ -129,7 +127,7 @@ export default function CheckoutPage() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="phone">Phone</label>
+                <label htmlFor="phone">Telefone</label>
                 <input
                   type="tel"
                   id="phone"
@@ -143,7 +141,7 @@ export default function CheckoutPage() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="address">Address</label>
+              <label htmlFor="address">Endereço</label>
               <input
                 type="text"
                 id="address"
@@ -157,7 +155,7 @@ export default function CheckoutPage() {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="city">City</label>
+                <label htmlFor="city">Cidade</label>
                 <input
                   type="text"
                   id="city"
@@ -170,7 +168,7 @@ export default function CheckoutPage() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="zipCode">ZIP Code</label>
+                <label htmlFor="zipCode">CEP</label>
                 <input
                   type="text"
                   id="zipCode"
@@ -185,7 +183,7 @@ export default function CheckoutPage() {
           </div>
 
           <div className="form-section">
-            <h2>Payment Method</h2>
+            <h2>Método de Pagamento</h2>
 
             <div className="payment-options">
               <div className="payment-option">
@@ -197,7 +195,7 @@ export default function CheckoutPage() {
                   checked={formData.paymentMethod === "credit"}
                   onChange={handleChange}
                 />
-                <label htmlFor="credit">Credit Card</label>
+                <label htmlFor="credit">Cartão de Crédito</label>
               </div>
 
               <div className="payment-option">
@@ -209,14 +207,14 @@ export default function CheckoutPage() {
                   checked={formData.paymentMethod === "cash"}
                   onChange={handleChange}
                 />
-                <label htmlFor="cash">Cash on Delivery</label>
+                <label htmlFor="cash">Dinheiro na Entrega</label>
               </div>
             </div>
 
             {formData.paymentMethod === "credit" && (
               <div className="credit-card-fields">
                 <div className="form-group">
-                  <label htmlFor="cardNumber">Card Number</label>
+                  <label htmlFor="cardNumber">Número do Cartão</label>
                   <input
                     type="text"
                     id="cardNumber"
@@ -231,14 +229,14 @@ export default function CheckoutPage() {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label htmlFor="cardExpiry">Expiry Date</label>
+                    <label htmlFor="cardExpiry">Data de Validade</label>
                     <input
                       type="text"
                       id="cardExpiry"
                       name="cardExpiry"
                       value={formData.cardExpiry}
                       onChange={handleChange}
-                      placeholder="MM/YY"
+                      placeholder="MM/AA"
                       className={errors.cardExpiry ? "error" : ""}
                     />
                     {errors.cardExpiry && <span className="error-message">{errors.cardExpiry}</span>}
@@ -263,12 +261,12 @@ export default function CheckoutPage() {
           </div>
 
           <button type="submit" className="place-order-button" disabled={loading}>
-            {loading ? "Processing..." : "Place Order"}
+            {loading ? "Processando..." : "Fazer Pedido"}
           </button>
         </form>
 
         <div className="order-summary">
-          <h2>Order Summary</h2>
+          <h2>Resumo do Pedido</h2>
 
           <div className="summary-items">
             {cart.map((item) => (
@@ -276,7 +274,7 @@ export default function CheckoutPage() {
                 <span>
                   {item.quantity} x {item.name}
                 </span>
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
+                <span>R${(item.price * item.quantity).toFixed(2)}</span>
               </div>
             ))}
           </div>
@@ -285,26 +283,25 @@ export default function CheckoutPage() {
 
           <div className="summary-row">
             <span>Subtotal</span>
-            <span>${cartTotal.toFixed(2)}</span>
+            <span>R${cartTotal.toFixed(2)}</span>
           </div>
 
           <div className="summary-row">
-            <span>Delivery Fee</span>
-            <span>$3.99</span>
+            <span>Taxa de Entrega</span>
+            <span>R$8,99</span>
           </div>
 
           <div className="summary-row">
-            <span>Tax</span>
-            <span>${(cartTotal * 0.08).toFixed(2)}</span>
+            <span>Impostos</span>
+            <span>R${(cartTotal * 0.08).toFixed(2)}</span>
           </div>
 
           <div className="summary-row total">
             <span>Total</span>
-            <span>${(cartTotal + 3.99 + cartTotal * 0.08).toFixed(2)}</span>
+            <span>R${(cartTotal + 8.99 + cartTotal * 0.08).toFixed(2)}</span>
           </div>
         </div>
       </div>
     </div>
   )
 }
-

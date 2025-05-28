@@ -47,7 +47,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
         description: "",
         price: "",
         category: categories[0] || "",
-        image: "/placeholder.svg?height=200&width=250&text=New+Item",
+        image: "/placeholder.svg?height=200&width=250&text=Novo+Item",
       })
     }
   }, [item, categories])
@@ -65,21 +65,21 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
     const newErrors: Record<string, string> = {}
 
     if (!formData.name.trim()) {
-      newErrors.name = "Name is required"
+      newErrors.name = "Nome é obrigatório"
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = "Description is required"
+      newErrors.description = "Descrição é obrigatória"
     }
 
     if (!formData.price.trim()) {
-      newErrors.price = "Price is required"
+      newErrors.price = "Preço é obrigatório"
     } else if (isNaN(Number(formData.price)) || Number(formData.price) <= 0) {
-      newErrors.price = "Price must be a valid positive number"
+      newErrors.price = "Preço deve ser um número positivo válido"
     }
 
     if (!formData.category) {
-      newErrors.category = "Category is required"
+      newErrors.category = "Categoria é obrigatória"
     }
 
     setErrors(newErrors)
@@ -93,13 +93,13 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
 
       // Verificar tipo de arquivo
       if (!file.type.startsWith("image/")) {
-        alert("Please select an image file")
+        alert("Por favor, selecione um arquivo de imagem")
         return
       }
 
       // Verificar tamanho do arquivo (máximo 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert("Image size must be less than 5MB")
+        alert("O tamanho da imagem deve ser menor que 5MB")
         return
       }
 
@@ -126,29 +126,29 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
 
     try {
       setIsSaving(true)
-      setUploadProgress("Validating form...")
+      setUploadProgress("Validando formulário...")
 
       // Se houver um novo arquivo de imagem, faça o upload
       let imageUrl = formData.image
       if (imageFile) {
         console.log("🔄 Iniciando upload da imagem...")
         setIsUploading(true)
-        setUploadProgress("Uploading image...")
+        setUploadProgress("Fazendo upload da imagem...")
 
         try {
           imageUrl = await uploadImage(imageFile)
           console.log("✅ Upload concluído! URL:", imageUrl)
-          setUploadProgress("Image uploaded successfully!")
+          setUploadProgress("Imagem enviada com sucesso!")
         } catch (uploadError) {
           console.error("❌ Erro no upload:", uploadError)
-          alert(`Failed to upload image: ${uploadError.message}`)
+          alert(`Falha ao enviar imagem: ${uploadError.message}`)
           return
         } finally {
           setIsUploading(false)
         }
       }
 
-      setUploadProgress("Saving item...")
+      setUploadProgress("Salvando item...")
 
       const itemData = {
         ...formData,
@@ -161,7 +161,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
       await onSave(itemData)
 
       console.log("✅ Item salvo com sucesso!")
-      setUploadProgress("Item saved successfully!")
+      setUploadProgress("Item salvo com sucesso!")
 
       // Limpar o arquivo temporário
       if (imageFile && formData.image.startsWith("blob:")) {
@@ -171,7 +171,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
       onClose()
     } catch (error) {
       console.error("❌ Erro ao salvar item:", error)
-      alert(`Failed to save menu item: ${error.message}`)
+      alert(`Falha ao salvar item do cardápio: ${error.message}`)
     } finally {
       setIsUploading(false)
       setIsSaving(false)
@@ -183,7 +183,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal-container">
         <div className="modal-header">
-          <h2>{item ? "Edit Menu Item" : "Add New Menu Item"}</h2>
+          <h2>{item ? "Editar Item do Cardápio" : "Adicionar Novo Item"}</h2>
           <button className="close-modal" onClick={onClose} type="button">
             <X size={20} />
           </button>
@@ -191,7 +191,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
 
         <form className="modal-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Item Name *</label>
+            <label htmlFor="name">Nome do Item *</label>
             <input
               type="text"
               id="name"
@@ -199,21 +199,21 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
               value={formData.name}
               onChange={handleChange}
               className={errors.name ? "error" : ""}
-              placeholder="Enter item name"
+              placeholder="Digite o nome do item"
               disabled={isSaving}
             />
             {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="description">Description *</label>
+            <label htmlFor="description">Descrição *</label>
             <textarea
               id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
               className={errors.description ? "error" : ""}
-              placeholder="Enter item description"
+              placeholder="Digite a descrição do item"
               rows={3}
               disabled={isSaving}
             />
@@ -222,7 +222,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="price">Price ($) *</label>
+              <label htmlFor="price">Preço (R$) *</label>
               <input
                 type="number"
                 id="price"
@@ -230,7 +230,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
                 value={formData.price}
                 onChange={handleChange}
                 className={errors.price ? "error" : ""}
-                placeholder="0.00"
+                placeholder="0,00"
                 step="0.01"
                 min="0"
                 disabled={isSaving}
@@ -239,7 +239,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
             </div>
 
             <div className="form-group">
-              <label htmlFor="category">Category *</label>
+              <label htmlFor="category">Categoria *</label>
               <select
                 id="category"
                 name="category"
@@ -248,7 +248,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
                 className={errors.category ? "error" : ""}
                 disabled={isSaving}
               >
-                <option value="">Select a category</option>
+                <option value="">Selecione uma categoria</option>
                 {categories.map((category) => (
                   <option key={category} value={category}>
                     {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -260,26 +260,26 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
           </div>
 
           <div className="form-group">
-            <label htmlFor="image">Image</label>
+            <label htmlFor="image">Imagem</label>
             <div className="image-upload-container">
               {formData.image ? (
                 <div className="image-preview" onClick={!isSaving ? handleImageClick : undefined}>
-                  <img src={formData.image || "/placeholder.svg"} alt="Preview" />
+                  <img src={formData.image || "/placeholder.svg"} alt="Visualização" />
                   <div className="image-overlay">
                     {isUploading ? (
                       <>
                         <Loader2 size={24} className="animate-spin" />
-                        <span>Uploading...</span>
+                        <span>Enviando...</span>
                       </>
                     ) : isSaving ? (
                       <>
                         <Loader2 size={24} className="animate-spin" />
-                        <span>Saving...</span>
+                        <span>Salvando...</span>
                       </>
                     ) : (
                       <>
                         <Upload size={24} />
-                        <span>Change Image</span>
+                        <span>Alterar Imagem</span>
                       </>
                     )}
                   </div>
@@ -287,7 +287,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
               ) : (
                 <div className="upload-placeholder" onClick={!isSaving ? handleImageClick : undefined}>
                   <Upload size={24} />
-                  <span>Upload Image</span>
+                  <span>Enviar Imagem</span>
                 </div>
               )}
               <input
@@ -300,26 +300,26 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
               />
             </div>
             <p className="help-text">
-              Click to upload or change image (max 5MB)
-              {imageFile && <span className="file-info"> - Selected: {imageFile.name}</span>}
+              Clique para enviar ou alterar imagem (máx 5MB)
+              {imageFile && <span className="file-info"> - Selecionado: {imageFile.name}</span>}
             </p>
             {uploadProgress && <p className="upload-progress">{uploadProgress}</p>}
           </div>
 
           <div className="form-actions">
             <button type="button" className="cancel-button" onClick={onClose} disabled={isSaving}>
-              Cancel
+              Cancelar
             </button>
             <button type="submit" className="save-button" disabled={isUploading || isSaving}>
               {isSaving ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  {isUploading ? "Uploading..." : "Saving..."}
+                  {isUploading ? "Enviando..." : "Salvando..."}
                 </>
               ) : item ? (
-                "Update Item"
+                "Atualizar Item"
               ) : (
-                "Add Item"
+                "Adicionar Item"
               )}
             </button>
           </div>

@@ -33,13 +33,13 @@ export default function RegisterPage() {
   const validateForm = () => {
     const newErrors = {}
 
-    if (!formData.name.trim()) newErrors.name = "Name is required"
-    if (!formData.email.trim()) newErrors.email = "Email is required"
-    if (!/^\S+@\S+\.\S+$/.test(formData.email)) newErrors.email = "Email is invalid"
-    if (!formData.password) newErrors.password = "Password is required"
-    if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters"
+    if (!formData.name.trim()) newErrors.name = "Nome é obrigatório"
+    if (!formData.email.trim()) newErrors.email = "Email é obrigatório"
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) newErrors.email = "Email é inválido"
+    if (!formData.password) newErrors.password = "Senha é obrigatória"
+    if (formData.password.length < 6) newErrors.password = "Senha deve ter pelo menos 6 caracteres"
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
+      newErrors.confirmPassword = "Senhas não coincidem"
     }
 
     setErrors(newErrors)
@@ -58,16 +58,16 @@ export default function RegisterPage() {
       const result = await register(formData)
 
       if (result.success) {
-        setMessage("Registration successful! Please check your email to verify your account.")
+        setMessage("Cadastro realizado com sucesso! Verifique seu email para confirmar sua conta.")
         setTimeout(() => {
           router.push("/login")
         }, 2000)
       } else {
-        setMessage(result.message || "Registration failed")
+        setMessage(result.message || "Falha no cadastro")
       }
     } catch (error) {
       console.error("Registration error:", error)
-      setMessage("An error occurred during registration. Please try again.")
+      setMessage("Ocorreu um erro durante o cadastro. Tente novamente.")
     } finally {
       setLoading(false)
     }
@@ -77,15 +77,15 @@ export default function RegisterPage() {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1>Create Account</h1>
-          <p>Join us to start ordering delicious food</p>
+          <h1>Criar Conta</h1>
+          <p>Junte-se a nós para começar a pedir comida deliciosa</p>
         </div>
 
-        {message && <div className={`message ${message.includes("successful") ? "success" : "error"}`}>{message}</div>}
+        {message && <div className={`message ${message.includes("sucesso") ? "success" : "error"}`}>{message}</div>}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Full Name</label>
+            <label htmlFor="name">Nome Completo</label>
             <input
               type="text"
               id="name"
@@ -112,7 +112,7 @@ export default function RegisterPage() {
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">Senha</label>
               <input
                 type="password"
                 id="password"
@@ -125,7 +125,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
+              <label htmlFor="confirmPassword">Confirmar Senha</label>
               <input
                 type="password"
                 id="confirmPassword"
@@ -139,37 +139,37 @@ export default function RegisterPage() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="phone">Phone (Optional)</label>
+            <label htmlFor="phone">Telefone (Opcional)</label>
             <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} />
           </div>
 
           <div className="form-group">
-            <label htmlFor="address">Address (Optional)</label>
+            <label htmlFor="address">Endereço (Opcional)</label>
             <input type="text" id="address" name="address" value={formData.address} onChange={handleChange} />
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="city">City (Optional)</label>
+              <label htmlFor="city">Cidade (Opcional)</label>
               <input type="text" id="city" name="city" value={formData.city} onChange={handleChange} />
             </div>
 
             <div className="form-group">
-              <label htmlFor="zipCode">ZIP Code (Optional)</label>
+              <label htmlFor="zipCode">CEP (Opcional)</label>
               <input type="text" id="zipCode" name="zipCode" value={formData.zipCode} onChange={handleChange} />
             </div>
           </div>
 
           <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? "Creating Account..." : "Create Account"}
+            {loading ? "Criando Conta..." : "Criar Conta"}
           </button>
         </form>
 
         <div className="auth-footer">
           <p>
-            Already have an account?{" "}
+            Já tem uma conta?{" "}
             <Link href="/login" className="auth-link">
-              Sign in
+              Entrar
             </Link>
           </p>
         </div>
@@ -177,3 +177,4 @@ export default function RegisterPage() {
     </div>
   )
 }
+
