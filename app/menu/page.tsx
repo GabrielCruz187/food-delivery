@@ -21,12 +21,10 @@ export default function MenuPage() {
     async function fetchMenuItems() {
       setLoading(true)
       try {
-        // In a real app, this would fetch from the API with the category filter
         const items = await getMenuItems(category)
         setMenuItems(items)
       } catch (error) {
         console.error("Error fetching menu items:", error)
-        // For demo purposes, set some sample data
         setMenuItems(sampleMenuItems)
       } finally {
         setLoading(false)
@@ -36,15 +34,23 @@ export default function MenuPage() {
     fetchMenuItems()
   }, [category])
 
-  const categories = ["all", "pizza", "burgers", "sushi", "pasta", "desserts", "drinks"]
+  const categories = [
+    { id: "all", name: "Todos" },
+    { id: "pizza", name: "Pizza" },
+    { id: "burgers", name: "Hambúrgueres" },
+    { id: "sushi", name: "Sushi" },
+    { id: "pasta", name: "Massas" },
+    { id: "desserts", name: "Sobremesas" },
+    { id: "drinks", name: "Bebidas" },
+  ]
 
   return (
     <div className="menu-page">
       <div className="menu-header">
-        <h1>Our Menu</h1>
+        <h1>Nosso Cardápio</h1>
         <button className="filter-toggle-button" onClick={() => setShowFilters(!showFilters)}>
           <Filter size={20} />
-          Filters
+          Filtros
         </button>
       </div>
 
@@ -52,18 +58,18 @@ export default function MenuPage() {
         <div className="categories-filter">
           {categories.map((cat) => (
             <button
-              key={cat}
-              className={`category-button ${category === cat ? "active" : ""}`}
-              onClick={() => setCategory(cat)}
+              key={cat.id}
+              className={`category-button ${category === cat.id ? "active" : ""}`}
+              onClick={() => setCategory(cat.id)}
             >
-              {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              {cat.name}
             </button>
           ))}
         </div>
       </div>
 
       {loading ? (
-        <div className="loading">Loading menu items...</div>
+        <div className="loading">Carregando itens do cardápio...</div>
       ) : (
         <div className="menu-grid">
           {menuItems.map((item) => (
@@ -75,7 +81,7 @@ export default function MenuPage() {
                 <h3>{item.name}</h3>
                 <p className="item-description">{item.description}</p>
                 <div className="item-footer">
-                  <p className="item-price">${item.price.toFixed(2)}</p>
+                  <p className="item-price">R${item.price.toFixed(2)}</p>
                   <AddToCartButton item={item} />
                 </div>
               </div>
@@ -87,71 +93,70 @@ export default function MenuPage() {
   )
 }
 
-// Sample data for demonstration
+// Dados de exemplo para demonstração
 const sampleMenuItems = [
   {
     id: 1,
-    name: "Margherita Pizza",
-    description: "Classic pizza with tomato sauce, mozzarella, and basil",
-    price: 12.99,
+    name: "Pizza Margherita",
+    description: "Pizza clássica com molho de tomate, mussarela e manjericão",
+    price: 32.99,
     category: "pizza",
     image: "/placeholder.svg?height=200&width=250&text=Pizza",
   },
   {
     id: 2,
-    name: "Pepperoni Pizza",
-    description: "Pizza topped with pepperoni slices and cheese",
-    price: 14.99,
+    name: "Pizza Pepperoni",
+    description: "Pizza coberta com fatias de pepperoni e queijo",
+    price: 36.99,
     category: "pizza",
     image: "/placeholder.svg?height=200&width=250&text=Pepperoni",
   },
   {
     id: 3,
-    name: "Classic Burger",
-    description: "Beef patty with lettuce, tomato, and special sauce",
-    price: 9.99,
+    name: "Hambúrguer Clássico",
+    description: "Hambúrguer de carne com alface, tomate e molho especial",
+    price: 24.99,
     category: "burgers",
-    image: "/placeholder.svg?height=200&width=250&text=Burger",
+    image: "/placeholder.svg?height=200&width=250&text=Hambúrguer",
   },
   {
     id: 4,
     name: "Cheeseburger",
-    description: "Classic burger with American cheese",
-    price: 10.99,
+    description: "Hambúrguer clássico com queijo americano",
+    price: 27.99,
     category: "burgers",
     image: "/placeholder.svg?height=200&width=250&text=Cheeseburger",
   },
   {
     id: 5,
     name: "California Roll",
-    description: "Crab, avocado, and cucumber roll",
-    price: 16.99,
+    description: "Sushi com caranguejo, abacate e pepino",
+    price: 42.99,
     category: "sushi",
     image: "/placeholder.svg?height=200&width=250&text=Sushi",
   },
   {
     id: 6,
-    name: "Pasta Carbonara",
-    description: "Creamy pasta with bacon and parmesan",
-    price: 14.99,
+    name: "Macarrão Carbonara",
+    description: "Massa cremosa com bacon e parmesão",
+    price: 36.99,
     category: "pasta",
-    image: "/placeholder.svg?height=200&width=250&text=Pasta",
+    image: "/placeholder.svg?height=200&width=250&text=Massa",
   },
   {
     id: 7,
-    name: "Chocolate Cake",
-    description: "Rich chocolate cake with ganache",
-    price: 7.99,
+    name: "Bolo de Chocolate",
+    description: "Bolo rico de chocolate com ganache",
+    price: 19.99,
     category: "desserts",
-    image: "/placeholder.svg?height=200&width=250&text=Cake",
+    image: "/placeholder.svg?height=200&width=250&text=Bolo",
   },
   {
     id: 8,
-    name: "Iced Coffee",
-    description: "Cold brewed coffee with milk",
-    price: 4.99,
+    name: "Café Gelado",
+    description: "Café gelado com leite",
+    price: 12.99,
     category: "drinks",
-    image: "/placeholder.svg?height=200&width=250&text=Coffee",
+    image: "/placeholder.svg?height=200&width=250&text=Café",
   },
 ]
-

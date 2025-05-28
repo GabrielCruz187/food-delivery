@@ -96,7 +96,7 @@ export default function Header() {
       <div className="header-container">
         <div className="logo">
           <Link href="/" onClick={closeMenu}>
-            FoodDelivery
+            DeliveryFood
           </Link>
         </div>
 
@@ -108,22 +108,22 @@ export default function Header() {
           <ul className="nav-links">
             <li>
               <Link href="/" className={pathname === "/" ? "active" : ""} onClick={closeMenu}>
-                Home
+                Início
               </Link>
             </li>
             <li>
               <Link href="/menu" className={pathname === "/menu" ? "active" : ""} onClick={closeMenu}>
-                Menu
+                Cardápio
               </Link>
             </li>
             <li>
               <Link href="/about" className={pathname === "/about" ? "active" : ""} onClick={closeMenu}>
-                About
+                Sobre
               </Link>
             </li>
             <li>
               <Link href="/contact" className={pathname === "/contact" ? "active" : ""} onClick={closeMenu}>
-                Contact
+                Contato
               </Link>
             </li>
           </ul>
@@ -151,27 +151,27 @@ export default function Header() {
                   </div>
                   <div className="dropdown-divider"></div>
                   <Link href="/profile" className="dropdown-item" onClick={() => setShowUserMenu(false)}>
-                    Profile
+                    Perfil
                   </Link>
                   <Link href="/orders" className="dropdown-item" onClick={() => setShowUserMenu(false)}>
-                    My Orders
+                    Meus Pedidos
                   </Link>
                   {user.isAdmin && (
                     <Link href="/admin/dashboard" className="dropdown-item" onClick={() => setShowUserMenu(false)}>
-                      Admin Panel
+                      Painel Admin
                     </Link>
                   )}
                   <div className="dropdown-divider"></div>
                   <button className="dropdown-item logout" onClick={handleLogout}>
                     <LogOut size={16} />
-                    Logout
+                    Sair
                   </button>
                 </div>
               )}
             </div>
           ) : (
             <Link href="/login" className="login-button">
-              Login
+              Entrar
             </Link>
           )}
 

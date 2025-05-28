@@ -22,9 +22,9 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="footer-container">
         <div className="footer-section">
-          <h3 className="footer-title">FoodDelivery</h3>
+          <h3 className="footer-title">DeliveryFood</h3>
           <p className="footer-description">
-            Delicious food delivered to your doorstep. Order online for a quick and easy dining experience.
+            Comida deliciosa entregue na sua porta. Peça online para uma experiência gastronômica rápida e fácil.
           </p>
           <div className="social-links">
             <a href="#" aria-label="Facebook">
@@ -40,61 +40,59 @@ export default function Footer() {
         </div>
 
         <div className="footer-section">
-          <h3 className="footer-title">Quick Links</h3>
+          <h3 className="footer-title">Links Rápidos</h3>
           <ul className="footer-links">
             <li>
-              <Link href="/">Home</Link>
+              <Link href="/">Início</Link>
             </li>
             <li>
-              <Link href="/menu">Menu</Link>
+              <Link href="/menu">Cardápio</Link>
             </li>
             <li>
-              <Link href="/about">About Us</Link>
+              <Link href="/about">Sobre Nós</Link>
             </li>
             <li>
-              <Link href="/contact">Contact</Link>
+              <Link href="/contact">Contato</Link>
             </li>
           </ul>
         </div>
 
         <div className="footer-section">
-          <h3 className="footer-title">Contact Us</h3>
+          <h3 className="footer-title">Fale Conosco</h3>
           <ul className="contact-info">
             <li>
               <Phone size={16} />
-              <span>(123) 456-7890</span>
+              <span>(11) 99999-9999</span>
             </li>
             <li>
               <Mail size={16} />
-              <span>info@fooddelivery.com</span>
+              <span>contato@deliveryfood.com</span>
             </li>
             <li>
               <MapPin size={16} />
-              <span>123 Main Street, City, Country</span>
+              <span>Rua das Flores, 123, São Paulo, SP</span>
             </li>
           </ul>
         </div>
 
         <div className="footer-section">
-          <h3 className="footer-title">Opening Hours</h3>
+          <h3 className="footer-title">Horário de Funcionamento</h3>
           <ul className="opening-hours">
             <li>
-              <span>Monday - Friday</span>
-              <span>9:00 AM - 10:00 PM</span>
+              <span>Segunda - Sexta</span>
+              <span>09:00 - 22:00</span>
             </li>
             <li>
-              <span>Saturday - Sunday</span>
-              <span>10:00 AM - 11:00 PM</span>
+              <span>Sábado - Domingo</span>
+              <span>10:00 - 23:00</span>
             </li>
           </ul>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} FoodDelivery. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} DeliveryFood. Todos os direitos reservados.</p>
       </div>
     </footer>
   )
 }
-
-

@@ -30,8 +30,7 @@ export default function AddToCartButton({ item }: AddToCartButtonProps) {
   return (
     <button className={`add-to-cart-button ${isAdding ? "adding" : ""}`} onClick={handleAddToCart}>
       <ShoppingCart size={16} />
-      {isAdding ? "Added!" : "Add to Cart"}
+      {isAdding ? "Adicionado!" : "Adicionar ao Carrinho"}
     </button>
   )
 }
-

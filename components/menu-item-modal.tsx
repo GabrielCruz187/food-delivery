@@ -27,6 +27,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState("")
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -88,6 +89,8 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      console.log("📁 Arquivo selecionado:", file.name, "Tamanho:", file.size)
+
       // Verificar tipo de arquivo
       if (!file.type.startsWith("image/")) {
         alert("Please select an image file")
@@ -107,6 +110,8 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
         ...prev,
         image: imageUrl,
       }))
+
+      console.log("✅ Arquivo preparado para upload")
     }
   }
 
@@ -121,14 +126,29 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
 
     try {
       setIsSaving(true)
+      setUploadProgress("Validating form...")
 
       // Se houver um novo arquivo de imagem, faça o upload
       let imageUrl = formData.image
       if (imageFile) {
+        console.log("🔄 Iniciando upload da imagem...")
         setIsUploading(true)
-        imageUrl = await uploadImage(imageFile)
-        setIsUploading(false)
+        setUploadProgress("Uploading image...")
+
+        try {
+          imageUrl = await uploadImage(imageFile)
+          console.log("✅ Upload concluído! URL:", imageUrl)
+          setUploadProgress("Image uploaded successfully!")
+        } catch (uploadError) {
+          console.error("❌ Erro no upload:", uploadError)
+          alert(`Failed to upload image: ${uploadError.message}`)
+          return
+        } finally {
+          setIsUploading(false)
+        }
       }
+
+      setUploadProgress("Saving item...")
 
       const itemData = {
         ...formData,
@@ -136,14 +156,26 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
         image: imageUrl,
       }
 
+      console.log("💾 Salvando item:", itemData)
+
       await onSave(itemData)
+
+      console.log("✅ Item salvo com sucesso!")
+      setUploadProgress("Item saved successfully!")
+
+      // Limpar o arquivo temporário
+      if (imageFile && formData.image.startsWith("blob:")) {
+        URL.revokeObjectURL(formData.image)
+      }
+
       onClose()
     } catch (error) {
-      console.error("Error saving menu item:", error)
-      alert("Failed to save menu item. Please try again.")
+      console.error("❌ Erro ao salvar item:", error)
+      alert(`Failed to save menu item: ${error.message}`)
     } finally {
       setIsUploading(false)
       setIsSaving(false)
+      setUploadProgress("")
     }
   }
 
@@ -168,6 +200,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
               onChange={handleChange}
               className={errors.name ? "error" : ""}
               placeholder="Enter item name"
+              disabled={isSaving}
             />
             {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
@@ -182,6 +215,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
               className={errors.description ? "error" : ""}
               placeholder="Enter item description"
               rows={3}
+              disabled={isSaving}
             />
             {errors.description && <span className="error-message">{errors.description}</span>}
           </div>
@@ -199,6 +233,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
                 placeholder="0.00"
                 step="0.01"
                 min="0"
+                disabled={isSaving}
               />
               {errors.price && <span className="error-message">{errors.price}</span>}
             </div>
@@ -211,6 +246,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
                 value={formData.category}
                 onChange={handleChange}
                 className={errors.category ? "error" : ""}
+                disabled={isSaving}
               >
                 <option value="">Select a category</option>
                 {categories.map((category) => (
@@ -227,11 +263,19 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
             <label htmlFor="image">Image</label>
             <div className="image-upload-container">
               {formData.image ? (
-                <div className="image-preview" onClick={handleImageClick}>
+                <div className="image-preview" onClick={!isSaving ? handleImageClick : undefined}>
                   <img src={formData.image || "/placeholder.svg"} alt="Preview" />
                   <div className="image-overlay">
                     {isUploading ? (
-                      <Loader2 size={24} className="animate-spin" />
+                      <>
+                        <Loader2 size={24} className="animate-spin" />
+                        <span>Uploading...</span>
+                      </>
+                    ) : isSaving ? (
+                      <>
+                        <Loader2 size={24} className="animate-spin" />
+                        <span>Saving...</span>
+                      </>
                     ) : (
                       <>
                         <Upload size={24} />
@@ -241,7 +285,7 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
                   </div>
                 </div>
               ) : (
-                <div className="upload-placeholder" onClick={handleImageClick}>
+                <div className="upload-placeholder" onClick={!isSaving ? handleImageClick : undefined}>
                   <Upload size={24} />
                   <span>Upload Image</span>
                 </div>
@@ -252,9 +296,14 @@ export default function MenuItemModal({ item, onSave, onClose, categories }: Men
                 onChange={handleFileChange}
                 accept="image/*"
                 style={{ display: "none" }}
+                disabled={isSaving}
               />
             </div>
-            <p className="help-text">Click to upload or change image (max 5MB)</p>
+            <p className="help-text">
+              Click to upload or change image (max 5MB)
+              {imageFile && <span className="file-info"> - Selected: {imageFile.name}</span>}
+            </p>
+            {uploadProgress && <p className="upload-progress">{uploadProgress}</p>}
           </div>
 
           <div className="form-actions">

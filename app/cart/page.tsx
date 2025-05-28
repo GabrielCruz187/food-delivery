@@ -16,16 +16,16 @@ export default function CartPage() {
   }, [])
 
   if (!isClient) {
-    return <div className="loading">Loading cart...</div>
+    return <div className="loading">Carregando carrinho...</div>
   }
 
   if (cart.length === 0) {
     return (
       <div className="empty-cart">
-        <h1>Your Cart is Empty</h1>
-        <p>Looks like you haven't added any items to your cart yet.</p>
+        <h1>Seu Carrinho está Vazio</h1>
+        <p>Parece que você ainda não adicionou nenhum item ao seu carrinho.</p>
         <Link href="/menu" className="primary-button">
-          Browse Menu
+          Ver Cardápio
         </Link>
       </div>
     )
@@ -33,7 +33,7 @@ export default function CartPage() {
 
   return (
     <div className="cart-page">
-      <h1>Your Cart</h1>
+      <h1>Seu Carrinho</h1>
 
       <div className="cart-container">
         <div className="cart-items">
@@ -45,7 +45,7 @@ export default function CartPage() {
 
               <div className="item-details">
                 <h3>{item.name}</h3>
-                <p className="item-price">${item.price.toFixed(2)}</p>
+                <p className="item-price">R${item.price.toFixed(2)}</p>
               </div>
 
               <div className="item-quantity">
@@ -61,7 +61,7 @@ export default function CartPage() {
                 </button>
               </div>
 
-              <div className="item-total">${(item.price * item.quantity).toFixed(2)}</div>
+              <div className="item-total">R${(item.price * item.quantity).toFixed(2)}</div>
 
               <button className="remove-button" onClick={() => removeItem(item.id)}>
                 <Trash2 size={18} />
@@ -71,35 +71,35 @@ export default function CartPage() {
         </div>
 
         <div className="cart-summary">
-          <h2>Order Summary</h2>
+          <h2>Resumo do Pedido</h2>
 
           <div className="summary-row">
             <span>Subtotal</span>
-            <span>${cartTotal.toFixed(2)}</span>
+            <span>R${cartTotal.toFixed(2)}</span>
           </div>
 
           <div className="summary-row">
-            <span>Delivery Fee</span>
-            <span>$3.99</span>
+            <span>Taxa de Entrega</span>
+            <span>R$8,99</span>
           </div>
 
           <div className="summary-row">
-            <span>Tax</span>
-            <span>${(cartTotal * 0.08).toFixed(2)}</span>
+            <span>Impostos</span>
+            <span>R${(cartTotal * 0.08).toFixed(2)}</span>
           </div>
 
           <div className="summary-row total">
             <span>Total</span>
-            <span>${(cartTotal + 3.99 + cartTotal * 0.08).toFixed(2)}</span>
+            <span>R${(cartTotal + 8.99 + cartTotal * 0.08).toFixed(2)}</span>
           </div>
 
           <Link href="/checkout" className="checkout-button">
-            Proceed to Checkout
+            Finalizar Pedido
             <ArrowRight size={16} />
           </Link>
 
           <button className="clear-cart-button" onClick={clearCart}>
-            Clear Cart
+            Limpar Carrinho
           </button>
         </div>
       </div>

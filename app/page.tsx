@@ -9,17 +9,17 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-content">
           <h1>
-            Delicious Food <span>Delivered To Your Door</span>
+            Comida Deliciosa <span>Entregue na Sua Porta</span>
           </h1>
-          <p>Order your favorite meals from the best restaurants in town</p>
+          <p>Peça suas refeições favoritas dos melhores restaurantes da cidade</p>
           <Link href="/menu" className="primary-button">
-            View Menu
+            Ver Cardápio
           </Link>
         </div>
         <div className="hero-image">
           <Image
             src="/placeholder.svg?height=400&width=600"
-            alt="Delicious food display"
+            alt="Exibição de comida deliciosa"
             width={600}
             height={400}
             className="hero-img"
@@ -28,37 +28,59 @@ export default function Home() {
       </section>
 
       <section className="categories-section">
-        <h2>Food Categories</h2>
+        <h2>Categorias de Comida</h2>
         <div className="categories-grid">
-          {["Pizza", "Burgers", "Sushi", "Pasta", "Desserts", "Drinks"].map((category) => (
-            <Link href={`/menu?category=${category.toLowerCase()}`} key={category} className="category-card">
+          {[
+            { name: "Pizza", category: "pizza" },
+            { name: "Hambúrgueres", category: "burgers" },
+            { name: "Sushi", category: "sushi" },
+            { name: "Massas", category: "pasta" },
+            { name: "Sobremesas", category: "desserts" },
+            { name: "Bebidas", category: "drinks" },
+          ].map((item) => (
+            <Link href={`/menu?category=${item.category}`} key={item.category} className="category-card">
               <div className="category-image">
                 <Image
-                  src={`/placeholder.svg?height=120&width=120&text=${category}`}
-                  alt={category}
+                  src={`/placeholder.svg?height=120&width=120&text=${item.name}`}
+                  alt={item.name}
                   width={120}
                   height={120}
                 />
               </div>
-              <h3>{category}</h3>
+              <h3>{item.name}</h3>
             </Link>
           ))}
         </div>
       </section>
 
       <section className="featured-section">
-        <h2>Featured Items</h2>
+        <h2>Itens em Destaque</h2>
         <div className="featured-grid">
           {[
             {
               id: 1,
-              name: "Margherita Pizza",
+              name: "Pizza Margherita",
               price: 12.99,
               image: "/placeholder.svg?height=200&width=200&text=Pizza",
             },
-            { id: 2, name: "Classic Burger", price: 9.99, image: "/placeholder.svg?height=200&width=200&text=Burger" },
-            { id: 3, name: "Pasta Carbonara", price: 14.99, image: "/placeholder.svg?height=200&width=200&text=Pasta" },
-            { id: 4, name: "California Roll", price: 16.99, image: "/placeholder.svg?height=200&width=200&text=Sushi" },
+            {
+              id: 2,
+              name: "Hambúrguer Clássico",
+              price: 9.99,
+              image: "/placeholder.svg?height=200&width=200&text=Hambúrguer",
+            },
+            {
+              id: 3,
+              name: "Macarrão Carbonara",
+              price: 14.99,
+              image: "/placeholder.svg?height=200&width=200&text=Massa",
+            },
+            {
+              id: 4,
+              name: "California Roll",
+              price: 16.99,
+              image: "/placeholder.svg?height=200&width=200&text=Sushi",
+            },
           ].map((item) => (
             <div className="menu-item" key={item.id}>
               <div className="item-image">
@@ -66,7 +88,7 @@ export default function Home() {
               </div>
               <div className="item-info">
                 <h3>{item.name}</h3>
-                <p className="item-price">${item.price}</p>
+                <p className="item-price">R${item.price}</p>
                 <AddToCartButton item={item} />
               </div>
             </div>
@@ -74,7 +96,7 @@ export default function Home() {
         </div>
         <div className="view-all">
           <Link href="/menu" className="secondary-button">
-            View All Menu Items
+            Ver Todos os Itens do Cardápio
           </Link>
         </div>
       </section>

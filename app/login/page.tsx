@@ -28,7 +28,7 @@ export default function LoginPage() {
     setError("")
 
     if (!formData.email || !formData.password) {
-      setError("Please enter both email and password")
+      setError("Por favor, insira email e senha")
       return
     }
 
@@ -38,18 +38,18 @@ export default function LoginPage() {
       const result = await login(formData.email, formData.password)
 
       if (result.success) {
-        // Redirect based on user type
+        // Redirecionar baseado no tipo de usuário
         if (result.user.isAdmin) {
           router.push("/admin/dashboard")
         } else {
           router.push("/")
         }
       } else {
-        setError(result.message || "Invalid credentials")
+        setError(result.message || "Credenciais inválidas")
       }
     } catch (error) {
       console.error("Login error:", error)
-      setError("An error occurred during login. Please try again.")
+      setError("Ocorreu um erro durante o login. Tente novamente.")
     } finally {
       setLoading(false)
     }
@@ -59,8 +59,8 @@ export default function LoginPage() {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1>Welcome Back</h1>
-          <p>Sign in to your account to continue</p>
+          <h1>Bem-vindo de Volta</h1>
+          <p>Entre na sua conta para continuar</p>
         </div>
 
         {error && <div className="error-alert">{error}</div>}
@@ -74,12 +74,12 @@ export default function LoginPage() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="your@email.com"
+              placeholder="seu@email.com"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Senha</label>
             <input
               type="password"
               id="password"
@@ -91,31 +91,31 @@ export default function LoginPage() {
           </div>
 
           <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "Entrando..." : "Entrar"}
           </button>
         </form>
 
         <div className="auth-footer">
           <p>
-            Don't have an account?{" "}
+            Não tem uma conta?{" "}
             <Link href="/register" className="auth-link">
-              Create one
+              Criar uma
             </Link>
           </p>
           <p>
             <Link href="/admin/login" className="auth-link">
-              Admin Login
+              Login de Administrador
             </Link>
           </p>
         </div>
 
         <div className="demo-credentials">
-          <h3>Demo Credentials:</h3>
+          <h3>Credenciais de Demonstração:</h3>
           <p>
             <strong>Admin:</strong> admin@example.com / admin123
           </p>
           <p>
-            <strong>User:</strong> Create a new account or use any email/password
+            <strong>Usuário:</strong> Crie uma nova conta ou use qualquer email/senha
           </p>
         </div>
       </div>
