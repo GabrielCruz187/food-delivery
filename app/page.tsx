@@ -18,7 +18,7 @@ export default function Home() {
         </div>
         <div className="hero-image">
           <Image
-            src="/placeholder.svg?height=400&width=600"
+            src="/principal.webp"
             alt="Exibição de comida deliciosa"
             width={600}
             height={400}
