@@ -9,7 +9,7 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-content">
           <h1>
-            Comida Deliciosa <span>Entregue na Sua Porta</span>
+            Seu pedido em <span>poucos cliques</span>
           </h1>
           <p>Peça suas refeições favoritas dos melhores restaurantes da cidade</p>
           <Link href="/menu" className="primary-button">
