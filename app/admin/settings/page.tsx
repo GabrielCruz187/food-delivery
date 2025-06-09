@@ -85,10 +85,10 @@ export default function AdminSettingsPage() {
 
       if (error) throw error
 
-      alert("Profile updated successfully!")
+      alert("Perfil atualizado com sucesso!")
     } catch (error) {
       console.error("Error updating profile:", error)
-      alert("Failed to update profile. Please try again.")
+      alert("Falha ao atualizar perfil. Tente novamente.")
     } finally {
       setSaving(false)
     }
@@ -96,12 +96,12 @@ export default function AdminSettingsPage() {
 
   const handlePasswordChange = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("New passwords don't match!")
+      alert("As novas senhas não coincidem!")
       return
     }
 
     if (passwordData.newPassword.length < 6) {
-      alert("Password must be at least 6 characters long!")
+      alert("A senha deve ter pelo menos 6 caracteres!")
       return
     }
 
@@ -113,7 +113,7 @@ export default function AdminSettingsPage() {
 
       if (error) throw error
 
-      alert("Password updated successfully!")
+      alert("Senha atualizada com sucesso!")
       setPasswordData({
         currentPassword: "",
         newPassword: "",
@@ -121,7 +121,7 @@ export default function AdminSettingsPage() {
       })
     } catch (error) {
       console.error("Error updating password:", error)
-      alert("Failed to update password. Please try again.")
+      alert("Falha ao atualizar senha. Tente novamente.")
     } finally {
       setSaving(false)
     }
@@ -133,17 +133,17 @@ export default function AdminSettingsPage() {
       // Em uma aplicação real, você salvaria essas configurações no banco de dados
       // Por enquanto, vamos apenas simular o salvamento
       await new Promise((resolve) => setTimeout(resolve, 1000))
-      alert("Store settings updated successfully!")
+      alert("Configurações da loja atualizadas com sucesso!")
     } catch (error) {
       console.error("Error updating store settings:", error)
-      alert("Failed to update store settings. Please try again.")
+      alert("Falha ao atualizar configurações da loja. Tente novamente.")
     } finally {
       setSaving(false)
     }
   }
 
   const handleLogout = async () => {
-    if (window.confirm("Are you sure you want to logout?")) {
+    if (window.confirm("Tem certeza de que deseja sair?")) {
       try {
         await logout()
         router.push("/admin/login")
@@ -160,7 +160,7 @@ export default function AdminSettingsPage() {
         <div className="admin-content">
           <div className="loading-container">
             <Loader2 size={48} className="animate-spin" />
-            <p>Loading settings...</p>
+            <p>Carregando configurações...</p>
           </div>
         </div>
       </div>
@@ -173,9 +173,9 @@ export default function AdminSettingsPage() {
 
       <div className="admin-content">
         <div className="admin-header">
-          <h1>Settings</h1>
+          <h1>Configurações</h1>
           <button className="logout-button" onClick={handleLogout}>
-            Logout
+            Sair
           </button>
         </div>
 
@@ -186,31 +186,31 @@ export default function AdminSettingsPage() {
               onClick={() => setActiveTab("profile")}
             >
               <User size={20} />
-              Profile
+              Perfil
             </button>
             <button
               className={`tab-button ${activeTab === "password" ? "active" : ""}`}
               onClick={() => setActiveTab("password")}
             >
               <Lock size={20} />
-              Password
+              Senha
             </button>
             <button
               className={`tab-button ${activeTab === "store" ? "active" : ""}`}
               onClick={() => setActiveTab("store")}
             >
               <Store size={20} />
-              Store Settings
+              Configurações da Loja
             </button>
           </div>
 
           <div className="settings-content">
             {activeTab === "profile" && (
               <div className="settings-section">
-                <h2>Profile Information</h2>
+                <h2>Informações do Perfil</h2>
                 <div className="form-grid">
                   <div className="form-group">
-                    <label>Full Name</label>
+                    <label>Nome Completo</label>
                     <input
                       type="text"
                       value={profileData.name}
@@ -220,10 +220,10 @@ export default function AdminSettingsPage() {
                   <div className="form-group">
                     <label>Email</label>
                     <input type="email" value={profileData.email} disabled className="disabled-input" />
-                    <small>Email cannot be changed</small>
+                    <small>O email não pode ser alterado</small>
                   </div>
                   <div className="form-group">
-                    <label>Phone</label>
+                    <label>Telefone</label>
                     <input
                       type="tel"
                       value={profileData.phone}
@@ -231,7 +231,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Address</label>
+                    <label>Endereço</label>
                     <input
                       type="text"
                       value={profileData.address}
@@ -239,7 +239,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>City</label>
+                    <label>Cidade</label>
                     <input
                       type="text"
                       value={profileData.city}
@@ -247,7 +247,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>ZIP Code</label>
+                    <label>CEP</label>
                     <input
                       type="text"
                       value={profileData.zipCode}
@@ -257,17 +257,17 @@ export default function AdminSettingsPage() {
                 </div>
                 <button className="save-button" onClick={handleProfileSave} disabled={saving}>
                   {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                  Save Profile
+                  Salvar Perfil
                 </button>
               </div>
             )}
 
             {activeTab === "password" && (
               <div className="settings-section">
-                <h2>Change Password</h2>
+                <h2>Alterar Senha</h2>
                 <div className="form-grid">
                   <div className="form-group">
-                    <label>Current Password</label>
+                    <label>Senha Atual</label>
                     <input
                       type="password"
                       value={passwordData.currentPassword}
@@ -275,7 +275,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>New Password</label>
+                    <label>Nova Senha</label>
                     <input
                       type="password"
                       value={passwordData.newPassword}
@@ -283,7 +283,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Confirm New Password</label>
+                    <label>Confirmar Nova Senha</label>
                     <input
                       type="password"
                       value={passwordData.confirmPassword}
@@ -297,17 +297,17 @@ export default function AdminSettingsPage() {
                   disabled={saving || !passwordData.newPassword || !passwordData.confirmPassword}
                 >
                   {saving ? <Loader2 size={16} className="animate-spin" /> : <Lock size={16} />}
-                  Update Password
+                  Atualizar Senha
                 </button>
               </div>
             )}
 
             {activeTab === "store" && (
               <div className="settings-section">
-                <h2>Store Settings</h2>
+                <h2>Configurações da Loja</h2>
                 <div className="form-grid">
                   <div className="form-group">
-                    <label>Store Name</label>
+                    <label>Nome da Loja</label>
                     <input
                       type="text"
                       value={storeSettings.storeName}
@@ -315,7 +315,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Store Description</label>
+                    <label>Descrição da Loja</label>
                     <textarea
                       value={storeSettings.storeDescription}
                       onChange={(e) => setStoreSettings({ ...storeSettings, storeDescription: e.target.value })}
@@ -323,7 +323,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Delivery Fee ($)</label>
+                    <label>Taxa de Entrega (R$)</label>
                     <input
                       type="number"
                       step="0.01"
@@ -332,7 +332,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Minimum Order ($)</label>
+                    <label>Pedido Mínimo (R$)</label>
                     <input
                       type="number"
                       step="0.01"
@@ -341,7 +341,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Delivery Time</label>
+                    <label>Tempo de Entrega</label>
                     <input
                       type="text"
                       value={storeSettings.deliveryTime}
@@ -349,7 +349,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Store Phone</label>
+                    <label>Telefone da Loja</label>
                     <input
                       type="tel"
                       value={storeSettings.storePhone}
@@ -357,7 +357,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Store Email</label>
+                    <label>Email da Loja</label>
                     <input
                       type="email"
                       value={storeSettings.storeEmail}
@@ -367,7 +367,7 @@ export default function AdminSettingsPage() {
                 </div>
                 <button className="save-button" onClick={handleStoreSettingsSave} disabled={saving}>
                   {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                  Save Store Settings
+                  Salvar Configurações da Loja
                 </button>
               </div>
             )}

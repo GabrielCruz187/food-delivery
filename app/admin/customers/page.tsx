@@ -113,7 +113,7 @@ export default function AdminCustomersPage() {
         <div className="admin-content">
           <div className="loading-container">
             <Loader2 size={48} className="animate-spin" />
-            <p>Loading customers...</p>
+            <p>Carregando clientes...</p>
           </div>
         </div>
       </div>
@@ -126,24 +126,24 @@ export default function AdminCustomersPage() {
 
       <div className="admin-content">
         <div className="admin-header">
-          <h1>Customer Management</h1>
+          <h1>Gerenciamento de Clientes</h1>
           <div className="customer-stats">
             <div className="stat-card">
               <Users className="stat-icon" />
               <div className="stat-content">
                 <span className="stat-number">{customers.length}</span>
-                <span className="stat-label">Total Customers</span>
+                <span className="stat-label">Total de Clientes</span>
               </div>
             </div>
             <div className="stat-card">
               <span className="stat-number">${customers.reduce((sum, c) => sum + c.totalSpent, 0).toFixed(2)}</span>
-              <span className="stat-label">Total Revenue</span>
+              <span className="stat-label">Receita Total</span>
             </div>
             <div className="stat-card">
               <span className="stat-number">
                 {(customers.reduce((sum, c) => sum + c.totalSpent, 0) / customers.length || 0).toFixed(2)}
               </span>
-              <span className="stat-label">Avg. Spent</span>
+              <span className="stat-label">Gasto Médio</span>
             </div>
           </div>
         </div>
@@ -152,7 +152,7 @@ export default function AdminCustomersPage() {
           <div className="search-container">
             <input
               type="text"
-              placeholder="Search customers by name or email..."
+              placeholder="Buscar clientes por nome ou email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -187,22 +187,22 @@ export default function AdminCustomersPage() {
                 </div>
                 <div className="detail-item">
                   <Calendar size={16} />
-                  <span>Joined: {customer.joinDate}</span>
+                  <span>Cadastrado em: {customer.joinDate}</span>
                 </div>
               </div>
 
               <div className="customer-stats-section">
                 <div className="stat-item">
                   <span className="stat-value">{customer.totalOrders}</span>
-                  <span className="stat-label">Orders</span>
+                  <span className="stat-label">Pedidos</span>
                 </div>
                 <div className="stat-item">
                   <span className="stat-value">${customer.totalSpent.toFixed(2)}</span>
-                  <span className="stat-label">Total Spent</span>
+                  <span className="stat-label">Total Gasto</span>
                 </div>
                 <div className="stat-item">
                   <span className="stat-value">{customer.lastOrder}</span>
-                  <span className="stat-label">Last Order</span>
+                  <span className="stat-label">Último Pedido</span>
                 </div>
               </div>
             </div>
@@ -212,8 +212,8 @@ export default function AdminCustomersPage() {
         {filteredCustomers.length === 0 && (
           <div className="empty-state">
             <Users size={64} />
-            <h3>No customers found</h3>
-            <p>No customers match your search criteria.</p>
+            <h3>Nenhum cliente encontrado</h3>
+            <p>Nenhum cliente corresponde aos seus critérios de busca.</p>
           </div>
         )}
       </div>

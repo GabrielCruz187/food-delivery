@@ -49,14 +49,14 @@ export default function AdminMenuPage() {
   }
 
   const handleDeleteItem = async (id: number) => {
-    if (window.confirm("Are you sure you want to delete this item?")) {
+    if (window.confirm("Tem certeza de que deseja excluir este item?")) {
       try {
         setIsDeleting(id)
         await deleteMenuItem(id)
         setMenuItems(menuItems.filter((item: any) => item.id !== id))
       } catch (error) {
         console.error("Error deleting menu item:", error)
-        alert("Failed to delete item. Please try again.")
+        alert("Falha ao excluir item. Tente novamente.")
       } finally {
         setIsDeleting(null)
       }
@@ -99,7 +99,7 @@ export default function AdminMenuPage() {
         <div className="admin-content">
           <div className="loading-container">
             <Loader2 size={48} className="animate-spin" />
-            <p>Loading menu items...</p>
+            <p>Carregando itens do cardápio...</p>
           </div>
         </div>
       </div>
@@ -112,10 +112,10 @@ export default function AdminMenuPage() {
 
       <div className="admin-content">
         <div className="admin-header">
-          <h1>Menu Management</h1>
+          <h1>Gerenciamento do Cardápio</h1>
           <button className="add-item-button" onClick={handleAddItem}>
             <Plus size={16} />
-            Add New Item
+            Adicionar Novo Item
           </button>
         </div>
 
@@ -124,7 +124,7 @@ export default function AdminMenuPage() {
             <Search size={18} className="search-icon" />
             <input
               type="text"
-              placeholder="Search menu items..."
+              placeholder="Buscar itens do cardápio..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -155,13 +155,13 @@ export default function AdminMenuPage() {
                 <h3>{item.name}</h3>
                 <p className="item-description">{item.description}</p>
                 <p className="item-price">${item.price.toFixed(2)}</p>
-                <p className="item-category">Category: {item.category}</p>
+                <p className="item-category">Categoria: {item.category}</p>
               </div>
 
               <div className="item-actions">
                 <button className="edit-button" onClick={() => handleEditItem(item)}>
                   <Edit size={16} />
-                  Edit
+                  Editar
                 </button>
 
                 <button
@@ -170,7 +170,7 @@ export default function AdminMenuPage() {
                   disabled={isDeleting === item.id}
                 >
                   {isDeleting === item.id ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
-                  Delete
+                  Excluir
                 </button>
               </div>
             </div>
@@ -179,7 +179,7 @@ export default function AdminMenuPage() {
 
         {filteredItems.length === 0 && (
           <div className="empty-state">
-            <p>No menu items found matching your criteria.</p>
+            <p>Nenhum item do cardápio encontrado que corresponda aos seus critérios.</p>
             {searchQuery || selectedCategory !== "all" ? (
               <button
                 className="clear-filters-button"
@@ -188,11 +188,11 @@ export default function AdminMenuPage() {
                   setSelectedCategory("all")
                 }}
               >
-                Clear Filters
+                Limpar Filtros
               </button>
             ) : (
               <button className="add-first-item-button" onClick={handleAddItem}>
-                Add Your First Item
+                Adicione Seu Primeiro Item
               </button>
             )}
           </div>

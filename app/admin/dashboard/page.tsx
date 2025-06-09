@@ -29,45 +29,45 @@ export default function AdminDashboardPage() {
 
   const checkAuthAndLoadData = async () => {
     try {
-      console.log("Dashboard: Checking authentication...")
+      console.log("Dashboard: Verificando autenticação...")
 
       // Verificar se o usuário está autenticado
       const {
         data: { session },
       } = await supabase.auth.getSession()
 
-      console.log("Dashboard: Session:", session ? "Found" : "Not found")
+      console.log("Dashboard: Sessão:", session ? "Found" : "Not found")
 
       if (!session) {
-        console.log("Dashboard: No session found, redirecting to login")
+        console.log("Dashboard: Nenhuma sessão encontrada, redirecionando para login")
         router.push("/admin/login")
         return
       }
 
       // Verificar se o usuário é admin
       const currentUser = await getCurrentUser()
-      console.log("Dashboard: Current user:", currentUser)
+      console.log("Dashboard: Usuário atual:", currentUser)
 
       if (!currentUser) {
-        console.log("Dashboard: No user data found, redirecting to login")
+        console.log("Dashboard: Dados do usuário não encontrados, redirecionando para login")
         router.push("/admin/login")
         return
       }
 
       if (!currentUser.isAdmin) {
-        console.log("Dashboard: User is not admin, redirecting to home")
+        console.log("Dashboard: Usuário não é admin, redirecionando para home")
         router.push("/")
         return
       }
 
-      console.log("Dashboard: User is admin, loading dashboard data...")
+      console.log("Dashboard: Usuário é admin, carregando dados do dashboard...")
       setUser(currentUser)
       setAuthChecked(true)
 
       // Carregar dados do dashboard
       await fetchDashboardData()
     } catch (error) {
-      console.error("Dashboard: Error checking auth:", error)
+      console.error("Dashboard: Erro ao verificar autenticação:", error)
       router.push("/admin/login")
     }
   }
@@ -75,16 +75,16 @@ export default function AdminDashboardPage() {
   const fetchDashboardData = async () => {
     setLoading(true)
     try {
-      console.log("Dashboard: Fetching dashboard data...")
+      console.log("Dashboard: Buscando dados do dashboard...")
       const [statsData, ordersData] = await Promise.all([getOrderStats(), getRecentOrders()])
 
-      console.log("Dashboard: Stats data:", statsData)
-      console.log("Dashboard: Orders data:", ordersData)
+      console.log("Dashboard: Dados de estatísticas:", statsData)
+      console.log("Dashboard: Dados de pedidos:", ordersData)
 
       setStats(statsData)
       setRecentOrders(ordersData)
     } catch (error) {
-      console.error("Dashboard: Error fetching dashboard data:", error)
+      console.error("Dashboard: Erro ao buscar dados do dashboard:", error)
       // Usar dados de exemplo em caso de erro
       setStats({
         totalOrders: 0,
@@ -113,7 +113,7 @@ export default function AdminDashboardPage() {
       <div className="admin-layout">
         <div className="admin-loading">
           <Loader2 size={48} className="animate-spin" />
-          <p>Checking authentication...</p>
+          <p>Verificando autenticação...</p>
         </div>
       </div>
     )
@@ -126,7 +126,7 @@ export default function AdminDashboardPage() {
         <div className="admin-content">
           <div className="admin-loading">
             <Loader2 size={48} className="animate-spin" />
-            <p>Loading dashboard...</p>
+            <p>Carregando dashboard...</p>
           </div>
         </div>
       </div>
@@ -141,11 +141,11 @@ export default function AdminDashboardPage() {
         <div className="admin-header">
           <div className="header-left">
             <h1>Dashboard</h1>
-            {user && <p className="welcome-message">Welcome back, {user.name}!</p>}
+            {user && <p className="welcome-message">Bem-vindo de volta, {user.name}!</p>}
           </div>
           <button className="logout-button" onClick={handleLogout}>
             <LogOut size={16} />
-            Logout
+            Sair
           </button>
         </div>
 
@@ -155,7 +155,7 @@ export default function AdminDashboardPage() {
               <ShoppingBag size={24} />
             </div>
             <div className="stat-details">
-              <h3>Total Orders</h3>
+              <h3>Total de Pedidos</h3>
               <p className="stat-value">{stats.totalOrders}</p>
             </div>
           </div>
@@ -165,7 +165,7 @@ export default function AdminDashboardPage() {
               <DollarSign size={24} />
             </div>
             <div className="stat-details">
-              <h3>Total Revenue</h3>
+              <h3>Receita Total</h3>
               <p className="stat-value">${stats.totalRevenue.toFixed(2)}</p>
             </div>
           </div>
@@ -175,7 +175,7 @@ export default function AdminDashboardPage() {
               <Users size={24} />
             </div>
             <div className="stat-details">
-              <h3>Customers</h3>
+              <h3>Clientes</h3>
               <p className="stat-value">{stats.totalCustomers}</p>
             </div>
           </div>
@@ -185,7 +185,7 @@ export default function AdminDashboardPage() {
               <Package size={24} />
             </div>
             <div className="stat-details">
-              <h3>Products</h3>
+              <h3>Produtos</h3>
               <p className="stat-value">{stats.totalProducts}</p>
             </div>
           </div>
@@ -193,9 +193,9 @@ export default function AdminDashboardPage() {
 
         <div className="recent-orders">
           <div className="section-header">
-            <h2>Recent Orders</h2>
+            <h2>Pedidos Recentes</h2>
             <button className="view-all-button" onClick={() => router.push("/admin/orders")}>
-              View All
+              Ver Todos
             </button>
           </div>
 
@@ -204,9 +204,9 @@ export default function AdminDashboardPage() {
               <table className="orders-table">
                 <thead>
                   <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Date</th>
+                    <th>ID do Pedido</th>
+                    <th>Cliente</th>
+                    <th>Data</th>
                     <th>Status</th>
                     <th>Total</th>
                   </tr>
@@ -228,7 +228,7 @@ export default function AdminDashboardPage() {
             </div>
           ) : (
             <div className="empty-orders">
-              <p>No orders found. Orders will appear here once customers start placing them.</p>
+              <p>Nenhum pedido encontrado. Os pedidos aparecerão aqui quando os clientes começarem a fazer pedidos.</p>
             </div>
           )}
         </div>
@@ -236,5 +236,3 @@ export default function AdminDashboardPage() {
     </div>
   )
 }
-
-

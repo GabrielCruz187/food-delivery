@@ -117,7 +117,7 @@ export default function AdminOrdersPage() {
         <div className="admin-content">
           <div className="loading-container">
             <Loader2 size={48} className="animate-spin" />
-            <p>Loading orders...</p>
+            <p>Carregando pedidos...</p>
           </div>
         </div>
       </div>
@@ -130,19 +130,19 @@ export default function AdminOrdersPage() {
 
       <div className="admin-content">
         <div className="admin-header">
-          <h1>Order Management</h1>
+          <h1>Gerenciamento de Pedidos</h1>
           <div className="order-stats">
             <div className="stat-card">
               <span className="stat-number">{orders.length}</span>
-              <span className="stat-label">Total Orders</span>
+              <span className="stat-label">Total de Pedidos</span>
             </div>
             <div className="stat-card">
               <span className="stat-number">{orders.filter((o) => o.status === "pending").length}</span>
-              <span className="stat-label">Pending</span>
+              <span className="stat-label">Pendente</span>
             </div>
             <div className="stat-card">
               <span className="stat-number">{orders.filter((o) => o.status === "preparing").length}</span>
-              <span className="stat-label">Preparing</span>
+              <span className="stat-label">Preparando</span>
             </div>
           </div>
         </div>
@@ -163,13 +163,13 @@ export default function AdminOrdersPage() {
 
         <div className="orders-table">
           <div className="table-header">
-            <div className="header-cell">Order ID</div>
-            <div className="header-cell">Customer</div>
-            <div className="header-cell">Items</div>
+            <div className="header-cell">ID do Pedido</div>
+            <div className="header-cell">Cliente</div>
+            <div className="header-cell">Itens</div>
             <div className="header-cell">Total</div>
             <div className="header-cell">Status</div>
-            <div className="header-cell">Date</div>
-            <div className="header-cell">Actions</div>
+            <div className="header-cell">Data</div>
+            <div className="header-cell">Ações</div>
           </div>
 
           {filteredOrders.map((order) => (
@@ -182,7 +182,7 @@ export default function AdminOrdersPage() {
                 </div>
               </div>
               <div className="table-cell">
-                <span className="items-count">{order.items.length} items</span>
+                <span className="items-count">{order.items.length} itens</span>
               </div>
               <div className="table-cell">
                 <span className="order-total">${order.total.toFixed(2)}</span>
@@ -198,14 +198,14 @@ export default function AdminOrdersPage() {
                 <div className="action-buttons">
                   <button className="view-button" onClick={() => setSelectedOrder(order)}>
                     <Eye size={16} />
-                    View
+                    Ver
                   </button>
                   {order.status === "pending" && (
                     <button
                       className="status-button preparing"
                       onClick={() => updateOrderStatus(order.id, "preparing")}
                     >
-                      Start Preparing
+                      Iniciar Preparo
                     </button>
                   )}
                   {order.status === "preparing" && (
@@ -213,7 +213,7 @@ export default function AdminOrdersPage() {
                       className="status-button completed"
                       onClick={() => updateOrderStatus(order.id, "completed")}
                     >
-                      Mark Complete
+                      Marcar como Concluído
                     </button>
                   )}
                 </div>
@@ -225,8 +225,8 @@ export default function AdminOrdersPage() {
         {filteredOrders.length === 0 && (
           <div className="empty-state">
             <Package size={64} />
-            <h3>No orders found</h3>
-            <p>No orders match the selected filter criteria.</p>
+            <h3>Nenhum pedido encontrado</h3>
+            <p>Nenhum pedido corresponde aos critérios de filtro selecionados.</p>
           </div>
         )}
 
@@ -235,7 +235,7 @@ export default function AdminOrdersPage() {
           <div className="modal-overlay" onClick={() => setSelectedOrder(null)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
-                <h2>Order Details - #{selectedOrder.id}</h2>
+                <h2>Detalhes do Pedido - #{selectedOrder.id}</h2>
                 <button className="close-button" onClick={() => setSelectedOrder(null)}>
                   ×
                 </button>
@@ -244,9 +244,9 @@ export default function AdminOrdersPage() {
               <div className="modal-body">
                 <div className="order-info-grid">
                   <div className="info-section">
-                    <h3>Customer Information</h3>
+                    <h3>Informações do Cliente</h3>
                     <div className="info-item">
-                      <span className="label">Name:</span>
+                      <span className="label">Nome:</span>
                       <span className="value">{selectedOrder.customer.name}</span>
                     </div>
                     <div className="info-item">
@@ -254,11 +254,11 @@ export default function AdminOrdersPage() {
                       <span className="value">{selectedOrder.customer.email}</span>
                     </div>
                     <div className="info-item">
-                      <span className="label">Phone:</span>
+                      <span className="label">Telefone:</span>
                       <span className="value">{selectedOrder.customer.phone}</span>
                     </div>
                     <div className="info-item">
-                      <span className="label">Address:</span>
+                      <span className="label">Endereço:</span>
                       <span className="value">
                         {selectedOrder.customer.address}, {selectedOrder.customer.city} {selectedOrder.customer.zipCode}
                       </span>
@@ -266,7 +266,7 @@ export default function AdminOrdersPage() {
                   </div>
 
                   <div className="info-section">
-                    <h3>Order Information</h3>
+                    <h3>Informações do Pedido</h3>
                     <div className="info-item">
                       <span className="label">Status:</span>
                       <div className={`status-badge ${getStatusColor(selectedOrder.status)}`}>
@@ -275,11 +275,11 @@ export default function AdminOrdersPage() {
                       </div>
                     </div>
                     <div className="info-item">
-                      <span className="label">Date:</span>
+                      <span className="label">Data:</span>
                       <span className="value">{selectedOrder.date}</span>
                     </div>
                     <div className="info-item">
-                      <span className="label">Payment:</span>
+                      <span className="label">Pagamento:</span>
                       <span className="value">{selectedOrder.paymentMethod}</span>
                     </div>
                     <div className="info-item">
@@ -290,7 +290,7 @@ export default function AdminOrdersPage() {
                 </div>
 
                 <div className="items-section">
-                  <h3>Order Items</h3>
+                  <h3>Itens do Pedido</h3>
                   <div className="items-list">
                     {selectedOrder.items.map((item, index) => (
                       <div key={index} className="item-row">
